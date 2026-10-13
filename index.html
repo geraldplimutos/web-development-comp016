@@ -5,38 +5,50 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bento Image Gallery</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-    crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   <style>
+    body {
+      overflow: hidden; /* Ensures no scrollbars */
+      background-color: #ffffff; /* Sets the gap/margin color */
+    }
+    
     .card {
-      min-height: 100px;
-      background-color: gray;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white; 
+      font-weight: bold;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.8); /* Helps the placeholder text stand out */
+      border: none; /* Removes standard card border */
+
+      /* THE PUZZLE MAGIC: Set your image here */
+      background-image: url('https://picsum.photos/id/43/1920/1080'); /* Replace with your picture file */
+      background-attachment: fixed; /* Binds the image position to the viewport */
+      background-size: cover;        /* Ensures it fills the screen */
+      background-position: center;  /* Centers the jigsaw image */
     }
   </style>
 </head>
 
 <body>
-  <div class="container-fluid p-3">
-    <!-- Top Row: Asymmetrical Grid -->
-    <div class="row">
+  <div class="container-fluid p-3 vh-100 d-flex flex-column">
+    <!-- Row 1 -->
+    <div class="row flex-grow-1">
       <div class="col-4 p-1">
-        <div class="card p-1 h-100">
+        <div class="card p-1">
           picture 1
         </div>
       </div>
       <div class="col-8">
-        <div class="row">
+        <div class="row h-50">
           <div class="col-12 p-1">
             <div class="card p-1">
               picture 2
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row h-50">
           <div class="col-6 p-1">
             <div class="card p-1">
               picture 3
@@ -50,8 +62,9 @@
         </div>
       </div>
     </div>
-    <!-- Bottom Row: Symmetrical Blocks -->
-    <div class="row">
+    
+    <!-- Row 2 -->
+    <div class="row flex-grow-1">
       <div class="col-3 p-1">
         <div class="card p-1">
           picture 5
@@ -68,9 +81,62 @@
         </div>
       </div>
     </div>
+
+    <!-- Row 3 -->
+    <div class="row flex-grow-1">
+      <div class="col-7 p-1">
+        <div class="card p-1">
+          picture 8
+        </div>
+      </div>
+      <div class="col-5 p-1">
+        <div class="card p-1">
+          picture 9
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="row flex-grow-1">
+      <div class="col-4">
+        <div class="row h-50">
+          <div class="col-12 p-1">
+            <div class="card p-1">
+              picture 10
+            </div>
+          </div>
+        </div>
+        <div class="row h-50">
+          <div class="col-12 p-1">
+            <div class="card p-1">
+              picture 11
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 p-1">
+        <div class="card p-1">
+          picture 12
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="row h-100">
+          <div class="col-6 p-1">
+            <div class="card p-1">
+              picture 13
+            </div>
+          </div>
+          <div class="col-6 p-1">
+            <div class="card p-1">
+              picture 14
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
