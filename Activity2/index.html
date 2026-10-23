@@ -1,11 +1,260 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Chess Court</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <style>
+    body {
+      background-color: #1c1713;
+      background-image: radial-gradient(circle at 50% 0%, #3a2c1d 0%, #1c1713 60%);
+      font-family: 'IM Fell English', Georgia, serif;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #e9dcc0;
+    }
+
+    h1, h2, h5 {
+      font-family: 'Cinzel Decorative', 'Times New Roman', serif;
+    }
+
+    .logo img {
+      max-width: 100%;
+      height: 140px;
+      object-fit: contain;
+    }
+
+    .banner h1 {
+      color: #d9b45a;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-shadow: 0 2px 0 #000;
+    }
+
+    .banner p {
+      font-style: italic;
+      max-width: 60ch;
+      margin: 0 auto;
+    }
+
+    .divider {
+      height: 14px;
+      margin: 18px auto;
+      max-width: 420px;
+      border-top: 3px double #8a6a2c;
+      border-bottom: 1px solid #8a6a2c;
+    }
+
+    .card {
+      min-height: 100px;
+      border: 3px double #8a6a2c;
+      border-radius: 4px;
+      color: #f3e8cf;
+      text-align: center;
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      flex-shrink: 0;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .card h5 {
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .card .badge {
+      font-family: 'IM Fell English', Georgia, serif;
+      font-size: 0.95rem;
+      font-weight: 400;
+      border-radius: 2px;
+    }
+
+    .card ul li {
+      margin-bottom: 4px;
+    }
+
+    .moves {
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+  </style>
 </head>
+
 <body>
-    
+  <div class="container-fluid p-3">
+
+    <div class="row">
+      <div class="col-12 p-1 logo text-center">
+        <img src="assets/chess-logo.png" class="img-fluid" alt="Chess">
+      </div>
+    </div>
+
+    <div class="row banner">
+      <div class="col-12 p-1 text-center">
+        <h1>The Chess Court</h1>
+        <div class="divider"></div>
+        <p>Six kinds of warriors serve two armies of sixteen. Learn how each one moves, what it is worth, and
+          how to keep your king from falling.</p>
+      </div>
+    </div>
+
+    <div class="row" id="parent">
+
+    </div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+
+  <script>
+    var pieces = [
+      {
+        id: 1,
+        name: "Pawn",
+        rank: "Foot Soldier",
+        count: "8 per side",
+        value: "1 point",
+        moves: [
+          "Steps 1 square straight forward",
+          "On its first move it may advance 2 squares",
+          "Captures 1 square diagonally forward",
+          "Never moves or captures backward"
+        ],
+        special: ["Promotion: reaching the far rank turns it into a Queen, Rook, Bishop or Knight", "En passant: captures a pawn that just advanced 2 squares, as if it had advanced 1"],
+        image: "assets/pawn.png",
+        bg: "#3b2a18",
+        color: "#e3b878",
+        border: "#a8742f"
+      }, {
+        id: 2,
+        name: "Knight",
+        rank: "Mounted Cavalier",
+        count: "2 per side",
+        value: "3 points",
+        moves: [
+          "Moves in an L shape: 2 squares one way, then 1 square sideways",
+          "Is the only piece that jumps over others",
+          "Lands on the opposite square color from where it started"
+        ],
+        special: ["Strongest near the center of the board", "Can attack up to 8 squares at once"],
+        image: "assets/knight.png",
+        bg: "#14301f",
+        color: "#9fd9a0",
+        border: "#4f9a5a"
+      }, {
+        id: 3,
+        name: "Bishop",
+        rank: "Court Priest",
+        count: "2 per side",
+        value: "3 points",
+        moves: [
+          "Moves any number of squares diagonally",
+          "Cannot jump over other pieces",
+          "Stays on one square color for the whole game"
+        ],
+        special: ["The two bishops cover both colors, so they work well as a pair", "Best on open boards with long diagonals"],
+        image: "assets/bishop.png",
+        bg: "#2c1c40",
+        color: "#c9a8f0",
+        border: "#7a4fb0"
+      }, {
+        id: 4,
+        name: "Rook",
+        rank: "Castle Tower",
+        count: "2 per side",
+        value: "5 points",
+        moves: [
+          "Moves any number of squares in a straight line",
+          "Goes forward, backward or sideways, never diagonally",
+          "Cannot jump over other pieces"
+        ],
+        special: ["Castling: swaps places with the king to protect it", "Strongest on open files and on the 7th rank"],
+        image: "assets/rook.png",
+        bg: "#2a2e33",
+        color: "#c3cbd4",
+        border: "#7d8793"
+      }, {
+        id: 5,
+        name: "Queen",
+        rank: "Sovereign Lady",
+        count: "1 per side",
+        value: "9 points",
+        moves: [
+          "Moves any number of squares in a straight line",
+          "Can go in any of the 8 directions: forward, backward, sideways or diagonally",
+          "Cannot jump over other pieces"
+        ],
+        special: ["The most powerful piece, combining the Rook and the Bishop", "Starts on the square matching her own color"],
+        image: "assets/queen.png",
+        bg: "#4a1420",
+        color: "#ff9fae",
+        border: "#b8324b"
+      }, {
+        id: 6,
+        name: "King",
+        rank: "The Crown",
+        count: "1 per side",
+        value: "Priceless",
+        moves: [
+          "Moves 1 square in any direction",
+          "Can never move into a square that an enemy attacks",
+          "Captures by moving onto an enemy piece, if that square is safe"
+        ],
+        special: ["Check: the king is under attack and must escape at once", "Checkmate: the king cannot escape, and the game is won", "Castling: moves 2 squares toward a rook, which hops over to the other side"],
+        image: "assets/king.png",
+        bg: "#1b2150",
+        color: "#ffd86b",
+        border: "#d9b45a"
+      }
+    ]
+
+    var parent = document.getElementById("parent");
+
+    for (var i = 0; i < pieces.length; i++) {
+
+      var moveList = "";
+      for (var j = 0; j < pieces[i].moves.length; j++) {
+        moveList += `<li>` + pieces[i].moves[j] + `</li>`;
+      }
+
+      var specialList = "";
+      for (var k = 0; k < pieces[i].special.length; k++) {
+        specialList += `<li>` + pieces[i].special[k] + `</li>`;
+      }
+
+      parent.innerHTML += `
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <div class="card p-4 h-100" style="background-color: ` + pieces[i].bg + `; border-color: ` + pieces[i].border + `;">
+            <img src="` + pieces[i].image + `" class="img-fluid" alt="` + pieces[i].name + `">
+            <h5 style="color: ` + pieces[i].color + `;">` + pieces[i].id + ". " + pieces[i].name + `</h5>
+            <p class="mb-3"><span class="badge" style="background-color: ` + pieces[i].color + `; color: ` + pieces[i].bg + `;">` + pieces[i].rank + `</span></p>
+            <p class="mb-1"><strong style="color: ` + pieces[i].color + `;">Army:</strong> ` + pieces[i].count + `</p>
+            <p class="mb-2"><strong style="color: ` + pieces[i].color + `;">Worth:</strong> ` + pieces[i].value + `</p>
+            <div class="moves">
+              <strong style="color: ` + pieces[i].color + `;">How it moves:</strong>
+              <ul class="list-unstyled mb-3">` + moveList + `</ul>
+              <strong style="color: ` + pieces[i].color + `;">Good to know:</strong>
+              <ul class="list-unstyled mb-0">` + specialList + `</ul>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  </script>
+
 </body>
+
 </html>
