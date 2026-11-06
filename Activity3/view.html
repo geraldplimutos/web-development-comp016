@@ -35,10 +35,10 @@
     <div class="row">
       <div class="col px-5">
         <div class="card p-5 text-center rounded-3 aot-card">
-          <div class="mx-auto rounded-circle overflow-hidden" style="background-color: grey; width: 300px; height: 300px;"
+          <div class="mx-auto rounded-circle overflow-hidden" style="background-color: grey; width: 300px; height: 300px; overflow: hidden;"
             id="imgContainer">
-            <img id="image" src="" style="width: 300px; height: 300px; object-fit: cover;" class="mx-auto"
-              onerror="this.onerror=null; this.src='assets/logo.png'; this.classList.add('aot-img-fallback');">
+            <img id="image" style="width: 300px; height: 300px; object-fit: cover;" class="mx-auto"
+              onerror="this.onerror=null; this.src='assets/logo.png'; this.style.objectFit='contain'; this.style.padding='30px';">
           </div>
           <div class="h3 mt-4 display-5" id="name">
             <div class="spinner-border" role="status">
@@ -104,10 +104,13 @@
       elSpecies.style.backgroundColor = color;
       elImgContainer.style.backgroundColor = color;
       if (character.img) {
+        elImage.style.objectFit = 'cover';
+        elImage.style.padding = '0';
         elImage.src = character.img;
       } else {
         elImage.src = 'assets/logo.png';
-        elImage.classList.add('aot-img-fallback');
+        elImage.style.objectFit = 'contain';
+        elImage.style.padding = '30px';
       }
 
       var groups = character.groups && character.groups.length > 0
