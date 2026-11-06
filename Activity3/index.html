@@ -245,12 +245,17 @@
         var id = character.id;
         var name = character.name;
         var picture = character.img;
-        var species = capitalizeFirstLetter(character.species[0]);
+        var speciesList = Array.isArray(character.species) ? character.species : [];
+        var species = capitalizeFirstLetter(speciesList[0] || 'Unknown');
+        var isStrictlyHuman = speciesList.length === 1 && speciesList[0] === 'Human';
         var status = character.status || 'Unknown';
-        var color = colors[character.species[0].toLowerCase()] || defaultColor;
+        var color = colors[(speciesList[0] || '').toLowerCase()] || defaultColor;
         var imageTag = picture
           ? '<img src="' + picture + '" alt="' + name + '" onerror="' + imageFallback + '">'
           : '<img src="assets/logo.png" alt="' + name + '" class="aot-img-fallback">';
+        var speciesTag = isStrictlyHuman
+          ? ''
+          : '<div class="rounded-pill aot-pill aot-tcg-species" style="background-color: ' + color + '">' + species + '</div>';
         var link = 'view.html?id=' + id + '&page=' + page;
 
         // subtitle under the name: alias[0], otherwise occupation, otherwise nothing
@@ -273,7 +278,7 @@
               ` + imageTag + `
             </a>
             <div class="aot-tcg-id">#` + id + `</div>
-            <div class="rounded-pill aot-pill aot-tcg-species" style="background-color: ` + color + `">` + species + `</div>
+            ` + speciesTag + `
             <div class="aot-tcg-plate">
               <a class="aot-name aot-tcg-name" href="` + link + `">` + name + `</a>
               ` + subtitleTag + `
