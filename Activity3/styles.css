@@ -95,6 +95,26 @@ body {
   box-shadow: 0 0 0 .2rem rgba(200, 180, 138, .25);
 }
 
+/* search bar */
+#searchInput {
+  width: 220px;
+  max-width: 100%;
+  background-color: var(--aot-surface);
+  border: 1px solid var(--aot-border);
+  color: var(--aot-text);
+}
+
+#searchInput::placeholder {
+  color: var(--aot-muted);
+}
+
+#searchInput:focus {
+  background-color: var(--aot-surface);
+  border-color: var(--aot-tan);
+  color: var(--aot-text);
+  box-shadow: 0 0 0 .2rem rgba(200, 180, 138, .25);
+}
+
 /* filter & sort */
 .aot-filter-panel {
   background-color: var(--aot-surface);
