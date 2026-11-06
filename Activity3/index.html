@@ -19,12 +19,13 @@
   </div>
 
   <div class="container">
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
+    <nav aria-label="Page navigation example" class="d-flex align-items-center">
+      <ul class="pagination mb-0 me-2">
         <li class="page-item"><a class="page-link" onclick="prev()">Previous</a></li>
         <li class="page-item"><a class="page-link" id="currentPage">1</a></li>
         <li class="page-item"><a class="page-link" onclick="next()">Next</a></li>
       </ul>
+      <select class="form-select w-auto" id="pageSelect" aria-label="Jump to page"></select>
     </nav>
   </div>
 
@@ -65,10 +66,23 @@
 
     var elParent = document.getElementById("parent");
     var elCurrentPage = document.getElementById("currentPage");
+    var elPageSelect = document.getElementById("pageSelect");
+
+    // fill the dropdown with every page, from 1 to lastPage
+    for (var i = 1; i <= lastPage; i++) {
+      elPageSelect.innerHTML += '<option value="' + i + '">' + i + '</option>';
+    }
+    elPageSelect.value = page;
+
+    elPageSelect.onchange = function () {
+      page = parseInt(elPageSelect.value);
+      getCharacters();
+    };
 
     const getCharacters = async () => {
       elParent.innerHTML = '';
       elCurrentPage.innerHTML = page;
+      elPageSelect.value = page;
 
       // two UI pages share one API page
       var apiPage = Math.ceil(page / 2);
