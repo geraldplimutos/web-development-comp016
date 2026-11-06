@@ -93,6 +93,9 @@
     const defaultColor = '#F5F5F5';
     const apiUrl = 'https://api.attackontitanapi.com/characters';
 
+    // broken API images fall back to the local logo
+    const imageFallback = "this.onerror=null; this.src='assets/logo.png'; this.classList.add('aot-img-fallback');";
+
     function capitalizeFirstLetter(str) {
       if (!str) return str;
       return str.charAt(0).toUpperCase() + str.slice(1);
@@ -241,7 +244,9 @@
         var species = capitalizeFirstLetter(character.species[0]);
         var status = character.status || 'Unknown';
         var color = colors[character.species[0].toLowerCase()] || defaultColor;
-        var imageTag = picture ? '<img src="' + picture + '" alt="' + name + '">' : '';
+        var imageTag = picture
+          ? '<img src="' + picture + '" alt="' + name + '" onerror="' + imageFallback + '">'
+          : '<img src="assets/logo.png" alt="' + name + '" class="aot-img-fallback">';
         var link = 'view.html?id=' + id + '&page=' + page;
 
         // subtitle under the name: alias[0], otherwise occupation, otherwise nothing

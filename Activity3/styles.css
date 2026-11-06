@@ -119,6 +119,12 @@ body {
   object-fit: cover;
 }
 
+/* fallback logo when a character image is missing or broken */
+.aot-img-fallback {
+  object-fit: contain !important;
+  padding: 20px;
+}
+
 /* top corner badges */
 .aot-tcg-id {
   position: absolute;

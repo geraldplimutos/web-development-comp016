@@ -37,7 +37,8 @@
         <div class="card p-5 text-center rounded-3 aot-card">
           <div class="mx-auto rounded-circle overflow-hidden" style="background-color: grey; width: 300px; height: 300px;"
             id="imgContainer">
-            <img id="image" src="" style="width: 300px; height: 300px; object-fit: cover;" class="mx-auto">
+            <img id="image" src="" style="width: 300px; height: 300px; object-fit: cover;" class="mx-auto"
+              onerror="this.onerror=null; this.src='assets/logo.png'; this.classList.add('aot-img-fallback');">
           </div>
           <div class="h3 mt-4 display-5" id="name">
             <div class="spinner-border" role="status">
@@ -105,7 +106,8 @@
       if (character.img) {
         elImage.src = character.img;
       } else {
-        elImage.style.display = 'none';
+        elImage.src = 'assets/logo.png';
+        elImage.classList.add('aot-img-fallback');
       }
 
       var groups = character.groups && character.groups.length > 0
