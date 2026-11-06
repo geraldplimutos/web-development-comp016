@@ -245,17 +245,27 @@
         var id = character.id;
         var name = character.name;
         var picture = character.img;
-        var speciesList = Array.isArray(character.species) ? character.species : [];
-        var species = capitalizeFirstLetter(speciesList[0] || 'Unknown');
-        var isStrictlyHuman = speciesList.length === 1 && speciesList[0] === 'Human';
+        var rawSpecies = character.species;
+        var speciesList = Array.isArray(rawSpecies)
+          ? rawSpecies
+          : (rawSpecies === null || rawSpecies === undefined || rawSpecies === '' ? [] : [rawSpecies]);
+
+        // drop every "human" entry (case-insensitive, trimmed), keeping the rest
+        var filteredSpecies = speciesList.filter(function (item) {
+          return String(item).trim().toLowerCase() !== 'human';
+        });
+
+        var species = filteredSpecies.map(function (item) {
+          return capitalizeFirstLetter(String(item).trim());
+        }).join(', ');
         var status = character.status || 'Unknown';
-        var color = colors[(speciesList[0] || '').toLowerCase()] || defaultColor;
+        var color = colors[String(filteredSpecies[0] || '').trim().toLowerCase()] || defaultColor;
         var imageTag = picture
           ? '<img src="' + picture + '" alt="' + name + '" onerror="' + imageFallback + '">'
           : '<img src="assets/logo.png" alt="' + name + '" class="aot-img-fallback">';
-        var speciesTag = isStrictlyHuman
-          ? ''
-          : '<div class="rounded-pill aot-pill aot-tcg-species" style="background-color: ' + color + '">' + species + '</div>';
+        var speciesTag = filteredSpecies.length
+          ? '<div class="rounded-pill aot-pill aot-tcg-species" style="background-color: ' + color + '">' + species + '</div>'
+          : '';
         var link = 'view.html?id=' + id + '&page=' + page;
 
         // subtitle under the name: alias[0], otherwise occupation, otherwise nothing
