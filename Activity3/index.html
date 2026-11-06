@@ -24,14 +24,16 @@
   </div>
 
   <div class="container">
-    <nav aria-label="Page navigation example" class="d-flex align-items-center">
+    <nav aria-label="Page navigation example" class="d-flex align-items-center flex-wrap">
       <ul class="pagination aot-pagination mb-0 me-2">
         <li class="page-item"><a class="page-link" onclick="prev()">Previous</a></li>
         <li class="page-item"><a class="page-link" id="currentPage">1</a></li>
         <li class="page-item"><a class="page-link" onclick="next()">Next</a></li>
       </ul>
       <select class="form-select w-auto" id="pageSelect" aria-label="Jump to page"></select>
-      <button class="btn aot-btn ms-2" type="button" id="filterToggle" data-bs-toggle="collapse"
+      <input class="form-control ms-2" type="search" id="searchInput" placeholder="Search characters..."
+        aria-label="Search characters by name">
+      <button class="btn aot-btn ms-2 my-1" type="button" id="filterToggle" data-bs-toggle="collapse"
         data-bs-target="#filterPanel" aria-expanded="false" aria-controls="filterPanel">Filter &amp; Sort</button>
     </nav>
 
@@ -108,6 +110,7 @@
     var elParent = document.getElementById("parent");
     var elCurrentPage = document.getElementById("currentPage");
     var elPageSelect = document.getElementById("pageSelect");
+    var elSearchInput = document.getElementById("searchInput");
     var elFilterGender = document.getElementById("filterGender");
     var elFilterStatus = document.getElementById("filterStatus");
     var elFilterSpecies = document.getElementById("filterSpecies");
@@ -115,11 +118,14 @@
 
     // apply the selected filters and sort to the full list
     function getVisibleCharacters() {
+      var search = elSearchInput.value.toLowerCase();
+
       var list = allCharacters.filter(function (character) {
+        var nameOk = character.name.toLowerCase().includes(search);
         var genderOk = elFilterGender.value === '' || character.gender === elFilterGender.value;
         var statusOk = elFilterStatus.value === '' || character.status === elFilterStatus.value;
         var speciesOk = elFilterSpecies.value === '' || character.species.indexOf(elFilterSpecies.value) > -1;
-        return genderOk && statusOk && speciesOk;
+        return nameOk && genderOk && statusOk && speciesOk;
       });
 
       if (elSortBy.value === 'name-asc') {
@@ -239,6 +245,7 @@
       getCharacters();
     };
 
+    elSearchInput.oninput = applyFilter;
     elFilterGender.onchange = applyFilter;
     elFilterStatus.onchange = applyFilter;
     elFilterSpecies.onchange = applyFilter;
