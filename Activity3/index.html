@@ -25,17 +25,21 @@
   </div>
 
   <div class="container mb-3">
-    <nav aria-label="Page navigation example" class="d-flex align-items-center flex-wrap">
-      <ul class="pagination aot-pagination mb-0 me-2">
-        <li class="page-item"><a class="page-link" onclick="prev()">Previous</a></li>
-        <li class="page-item"><a class="page-link" id="currentPage">1</a></li>
-        <li class="page-item"><a class="page-link" onclick="next()">Next</a></li>
-      </ul>
-      <select class="form-select w-auto" id="pageSelect" aria-label="Jump to page"></select>
-      <input class="form-control ms-2" type="search" id="searchInput" placeholder="Search characters..."
-        aria-label="Search characters by name">
-      <button class="btn aot-btn ms-2 my-1" type="button" id="filterToggle" data-bs-toggle="collapse"
-        data-bs-target="#filterPanel" aria-expanded="false" aria-controls="filterPanel">Filter &amp; Sort</button>
+    <nav aria-label="Page navigation example" class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center flex-wrap gap-2">
+        <ul class="pagination aot-pagination mb-0">
+          <li class="page-item"><a class="page-link" onclick="prev()">Previous</a></li>
+          <li class="page-item"><a class="page-link" id="currentPage">1</a></li>
+          <li class="page-item"><a class="page-link" onclick="next()">Next</a></li>
+        </ul>
+        <select class="form-select w-auto" id="pageSelect" aria-label="Jump to page"></select>
+      </div>
+      <div class="d-flex align-items-center gap-2 ms-md-auto flex-grow-1 flex-md-grow-0">
+        <input class="form-control flex-grow-1" style="min-width: 0; max-width: 18rem;" type="search"
+          id="searchInput" placeholder="Search characters..." aria-label="Search characters by name">
+        <button class="btn aot-btn flex-shrink-0" type="button" id="filterToggle" data-bs-toggle="collapse"
+          data-bs-target="#filterPanel" aria-expanded="false" aria-controls="filterPanel">Filter &amp; Sort</button>
+      </div>
     </nav>
 
     <div class="collapse mt-3" id="filterPanel">
