@@ -98,14 +98,6 @@
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    // turn a value into text: arrays become a comma separated list, empty values become a dash
-    function joinOrDash(value) {
-      if (Array.isArray(value)) {
-        return value.length > 0 ? value.join(', ') : '—';
-      }
-      return value || '—';
-    }
-
     var page = 1;
     var searchQuery = '';
     var genderQuery = '';
@@ -247,12 +239,24 @@
         var name = character.name;
         var picture = character.img;
         var species = capitalizeFirstLetter(character.species[0]);
-        var alias = joinOrDash(character.alias);
-        var roles = joinOrDash(character.roles);
         var status = character.status || 'Unknown';
         var color = colors[character.species[0].toLowerCase()] || defaultColor;
         var imageTag = picture ? '<img src="' + picture + '" alt="' + name + '">' : '';
         var link = 'view.html?id=' + id + '&page=' + page;
+
+        // subtitle under the name: alias[0], otherwise occupation, otherwise nothing
+        var aliases = character.alias || [];
+        var subtitle = aliases[0] && aliases[0].toLowerCase() !== 'unknown'
+          ? aliases[0]
+          : (character.occupation || '');
+
+        // bottom badge: roles[0], otherwise groups[0], otherwise occupation
+        var roles = character.roles || [];
+        var groups = character.groups || [];
+        var secondary = roles[0] || (groups[0] ? groups[0].name : '') || character.occupation || '';
+
+        var subtitleTag = subtitle ? '<div class="aot-tcg-alias">' + subtitle + '</div>' : '';
+        var secondaryTag = secondary ? '<span class="aot-tcg-info">' + secondary + '</span>' : '';
 
         elParent.innerHTML += `
           <div class="card aot-card aot-tcg-card">
@@ -263,10 +267,10 @@
             <div class="rounded-pill aot-pill aot-tcg-species" style="background-color: ` + color + `">` + species + `</div>
             <div class="aot-tcg-plate">
               <a class="aot-name aot-tcg-name" href="` + link + `">` + name + `</a>
-              <div class="aot-tcg-alias">` + alias + `</div>
+              ` + subtitleTag + `
               <div class="aot-tcg-tags">
                 <span class="aot-tcg-status">` + status + `</span>
-                <span class="aot-tcg-info">` + roles + `</span>
+                ` + secondaryTag + `
               </div>
             </div>
           </div>
