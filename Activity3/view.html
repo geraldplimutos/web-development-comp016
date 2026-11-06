@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AOT Dex</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container-fluid bg-danger shadow mb-3">
+    <div class="row">
+      <div class="col">
+        <div class="text-center display-6 text-white py-3">AOT Dex</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col px-5 my-3">
+        <a href="index.html" id="backlink">
+          <div class="btn btn-secondary">Back to list</div>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col px-5">
+        <div class="card shadow p-5 text-center rounded-5">
+          <div class="mx-auto rounded-circle overflow-hidden" style="background-color: grey; width: 300px; height: 300px;"
+            id="imgContainer">
+            <img id="image" src="" style="width: 300px; height: 300px; object-fit: cover;" class="mx-auto">
+          </div>
+          <div class="h3 mt-4 display-5" id="name">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <div>
+            <span class="badge rounded-pill text-black" id="species"></span>
+          </div>
+          <div class="mt-4 text-start" style="max-width: 420px;" id="details"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script>
+    const colors = {
+      human: '#DEFDE0',
+      horse: '#F4E7DA',
+      titan: '#FDDFDF',
+      'intelligent titan': '#FCF7DE',
+      'titan (formerly human)': '#EAEDA1',
+      unknown: '#E8E8E8',
+    };
+
+    const defaultColor = '#F5F5F5';
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get('id');
+    var page = urlParams.get('page');
+    page = page == null ? 1 : page;
+
+    var elName = document.getElementById("name");
+    var elImage = document.getElementById("image");
+    var elSpecies = document.getElementById("species");
+    var elImgContainer = document.getElementById("imgContainer");
+    var elBacklink = document.getElementById("backlink");
+    var elDetails = document.getElementById("details");
+
+    elBacklink.href = "index.html?page=" + page;
+
+    const getCharacter = async (id) => {
+      const response = await fetch('https://api.attackontitanapi.com/characters/' + id);
+      const character = await response.json();
+
+      var species = character.species[0];
+      var color = colors[species.toLowerCase()] || defaultColor;
+
+      elName.innerHTML = character.name;
+      elSpecies.innerHTML = species;
+      elSpecies.style.backgroundColor = color;
+      elImgContainer.style.backgroundColor = color;
+      if (character.img) {
+        elImage.src = character.img;
+      } else {
+        elImage.style.display = 'none';
+      }
+
+      var affiliation = character.groups.length > 0
+        ? character.groups.map(function (group) { return group.name; }).join(', ')
+        : '—';
+
+      elDetails.innerHTML = `
+        <p class="mb-1"><strong>Species:</strong> ` + character.species.join(', ') + `</p>
+        <p class="mb-1"><strong>Affiliation:</strong> ` + affiliation + `</p>
+        <p class="mb-1"><strong>Status:</strong> ` + (character.status || '—') + `</p>
+        <p class="mb-1"><strong>Gender:</strong> ` + (character.gender || '—') + `</p>
+        <p class="mb-1"><strong>Age:</strong> ` + (character.age || '—') + `</p>
+        <p class="mb-1"><strong>Height:</strong> ` + (character.height || '—') + `</p>
+        <p class="mb-1"><strong>Occupation:</strong> ` + (character.occupation || '—') + `</p>
+      `;
+    }
+
+    if (id != null) {
+      getCharacter(id);
+    }
+  </script>
+</body>
+
+</html>

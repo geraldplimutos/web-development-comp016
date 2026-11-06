@@ -1,11 +1,130 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AOT Dex</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
+
 <body>
-    <p>TEST!!</p>
+  <div class="container-fluid bg-danger shadow mb-3">
+    <div class="row">
+      <div class="col">
+        <div class="text-center display-6 text-white py-3">AOT Dex</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" onclick="prev()">Previous</a></li>
+        <li class="page-item"><a class="page-link" id="currentPage">1</a></li>
+        <li class="page-item"><a class="page-link" onclick="next()">Next</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container">
+    <div class="row" id="parent">
+
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script>
+    const colors = {
+      human: '#DEFDE0',
+      horse: '#F4E7DA',
+      titan: '#FDDFDF',
+      'intelligent titan': '#FCF7DE',
+      'titan (formerly human)': '#EAEDA1',
+      unknown: '#E8E8E8',
+    };
+
+    const defaultColor = '#F5F5F5';
+
+    function capitalizeFirstLetter(str) {
+      if (!str) return str;
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    var page = urlParams.get('page');
+
+    page = page == null ? 1 : parseInt(page);
+
+    var perPageLoad = 10;        // characters shown per UI page (API returns 20 per page)
+    var totalCharacters = 201;   // total characters in the API
+    var lastPage = Math.ceil(totalCharacters / perPageLoad);
+
+    var elParent = document.getElementById("parent");
+    var elCurrentPage = document.getElementById("currentPage");
+
+    const getCharacters = async () => {
+      elParent.innerHTML = '';
+      elCurrentPage.innerHTML = page;
+
+      // two UI pages share one API page
+      var apiPage = Math.ceil(page / 2);
+      var response = await fetch('https://api.attackontitanapi.com/characters?page=' + apiPage);
+      var data = await response.json();
+
+      // odd UI page -> first 10 results, even UI page -> last 10 results
+      var start = page % 2 === 1 ? 0 : perPageLoad;
+      var characters = data.results.slice(start, start + perPageLoad);
+
+      characters.forEach(function (character) {
+        var id = character.id;
+        var name = character.name;
+        var picture = character.img;
+        var species = capitalizeFirstLetter(character.species[0]);
+        var affiliation = character.groups.length > 0 ? character.groups[0].name : '';
+        var color = colors[character.species[0].toLowerCase()] || defaultColor;
+        var imageTag = picture ? '<img class="w-100" src="' + picture + '">' : '';
+
+        elParent.innerHTML += `
+          <div class="col-12">
+            <div class="card my-3 shadow-sm p-4 d-flex flex-row align-items-center">
+              <div class="rounded-circle overflow-hidden" style="width: 60px; height: 60px; background-color: ` + color + `;">
+                ` + imageTag + `
+              </div>
+              <div class="mx-4 h4">
+                <a style="text-decoration: none" href="view.html?id=`+ id +`&page=`+ page +`"> #` + id + " " + name + ` </a>
+              </div>
+              <div class="d-flex align-items-center ms-auto">
+                <div class="text-muted small me-3">` + affiliation + `</div>
+                <div class="rounded-pill px-4" style="background-color: ` + color + `">` + species + `</div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function prev() {
+      page -= 1;
+      if (page == 0) {
+        page = lastPage;
+      }
+      getCharacters();
+    }
+
+    function next() {
+      page += 1;
+      if (page > lastPage) {
+        page = 1;
+      }
+      getCharacters();
+    }
+
+    getCharacters();
+  </script>
 </body>
+
 </html>
