@@ -47,7 +47,7 @@
           <div>
             <span class="badge rounded-pill text-black" id="species"></span>
           </div>
-          <div class="mt-4 text-start" style="max-width: 420px;" id="details"></div>
+          <div class="mt-4 text-start" id="details"></div>
         </div>
       </div>
     </div>
@@ -67,6 +67,14 @@
     };
 
     const defaultColor = '#F5F5F5';
+
+    // turn a value into text: arrays become a comma separated list, empty values become a dash
+    function joinOrDash(value) {
+      if (Array.isArray(value)) {
+        return value.length > 0 ? value.join(', ') : '—';
+      }
+      return value || '—';
+    }
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -91,7 +99,7 @@
       var color = colors[species.toLowerCase()] || defaultColor;
 
       elName.innerHTML = character.name;
-      elSpecies.innerHTML = species;
+      elSpecies.innerHTML = joinOrDash(character.species);
       elSpecies.style.backgroundColor = color;
       elImgContainer.style.backgroundColor = color;
       if (character.img) {
@@ -100,18 +108,29 @@
         elImage.style.display = 'none';
       }
 
-      var affiliation = character.groups.length > 0
+      var groups = character.groups && character.groups.length > 0
         ? character.groups.map(function (group) { return group.name; }).join(', ')
         : '—';
 
+      var relatives = character.relatives && character.relatives.length > 0
+        ? character.relatives.map(function (relative) { return relative.family; }).join(', ')
+        : '—';
+
       elDetails.innerHTML = `
-        <p class="mb-1"><strong>Species:</strong> ` + character.species.join(', ') + `</p>
-        <p class="mb-1"><strong>Affiliation:</strong> ` + affiliation + `</p>
-        <p class="mb-1"><strong>Status:</strong> ` + (character.status || '—') + `</p>
-        <p class="mb-1"><strong>Gender:</strong> ` + (character.gender || '—') + `</p>
-        <p class="mb-1"><strong>Age:</strong> ` + (character.age || '—') + `</p>
-        <p class="mb-1"><strong>Height:</strong> ` + (character.height || '—') + `</p>
-        <p class="mb-1"><strong>Occupation:</strong> ` + (character.occupation || '—') + `</p>
+        <div class="aot-stats">
+          <div class="aot-stat"><span class="aot-stat-label">Alias</span><span class="aot-stat-value">` + joinOrDash(character.alias) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Species</span><span class="aot-stat-value">` + joinOrDash(character.species) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Status</span><span class="aot-stat-value">` + joinOrDash(character.status) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Gender</span><span class="aot-stat-value">` + joinOrDash(character.gender) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Age</span><span class="aot-stat-value">` + joinOrDash(character.age) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Height</span><span class="aot-stat-value">` + joinOrDash(character.height) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Occupation</span><span class="aot-stat-value">` + joinOrDash(character.occupation) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Birthplace</span><span class="aot-stat-value">` + joinOrDash(character.birthplace) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Residence</span><span class="aot-stat-value">` + joinOrDash(character.residence) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Roles</span><span class="aot-stat-value">` + joinOrDash(character.roles) + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Groups</span><span class="aot-stat-value">` + groups + `</span></div>
+          <div class="aot-stat"><span class="aot-stat-label">Relatives</span><span class="aot-stat-value">` + relatives + `</span></div>
+        </div>
       `;
     }
 
