@@ -104,6 +104,15 @@
 
     page = page == null ? 1 : parseInt(page);
 
+    var searchQuery = urlParams.get('search') || '';
+    var genderQuery = urlParams.get('gender') || '';
+    var statusQuery = urlParams.get('status') || '';
+    var speciesQuery = urlParams.get('species') || '';
+    var sortQuery = urlParams.get('sort');
+    if (sortQuery !== 'name-asc' && sortQuery !== 'name-desc') {
+      sortQuery = 'id';
+    }
+
     var perPageLoad = 10;      // characters shown per UI page
     var allCharacters = [];    // every character, loaded once
     var lastPage = 1;          // pages for the current filtered list
@@ -116,6 +125,33 @@
     var elFilterStatus = document.getElementById("filterStatus");
     var elFilterSpecies = document.getElementById("filterSpecies");
     var elSortBy = document.getElementById("sortBy");
+
+    // put the search, filters and sort from the URL back into the controls
+    function applyURLParams() {
+      elSearchInput.value = searchQuery;
+      elFilterGender.value = genderQuery;
+      elFilterStatus.value = statusQuery;
+      elFilterSpecies.value = speciesQuery;
+      elSortBy.value = sortQuery;
+    }
+
+    // write the current page, search, filters and sort into the address bar
+    function updateURL(replace) {
+      var params = new URLSearchParams();
+      params.set('page', page);
+      if (elSearchInput.value) params.set('search', elSearchInput.value);
+      if (elFilterGender.value) params.set('gender', elFilterGender.value);
+      if (elFilterStatus.value) params.set('status', elFilterStatus.value);
+      if (elFilterSpecies.value) params.set('species', elFilterSpecies.value);
+      if (elSortBy.value !== 'id') params.set('sort', elSortBy.value);
+
+      var url = 'index.html?' + params.toString();
+      if (replace) {
+        history.replaceState(null, '', url);
+      } else {
+        history.pushState(null, '', url);
+      }
+    }
 
     // apply the selected filters and sort to the full list
     function getVisibleCharacters() {
@@ -231,17 +267,20 @@
       fillFilter(elFilterStatus, uniqueValues('status'));
       fillFilter(elFilterSpecies, uniqueSpecies());
 
+      applyURLParams();
       getCharacters();
     };
 
     function applyFilter() {
       page = 1;
       getCharacters();
+      updateURL(true);
     }
 
     elPageSelect.onchange = function () {
       page = parseInt(elPageSelect.value);
       getCharacters();
+      updateURL();
     };
 
     elSearchInput.oninput = applyFilter;
@@ -256,6 +295,7 @@
         page = lastPage;
       }
       getCharacters();
+      updateURL();
     }
 
     function next() {
@@ -264,6 +304,7 @@
         page = 1;
       }
       getCharacters();
+      updateURL();
     }
 
     loadCharacters();
