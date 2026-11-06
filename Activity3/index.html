@@ -98,19 +98,28 @@
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    var page = urlParams.get('page');
+    var page = 1;
+    var searchQuery = '';
+    var genderQuery = '';
+    var statusQuery = '';
+    var speciesQuery = '';
+    var sortQuery = 'id';
 
-    page = page == null ? 1 : parseInt(page);
+    // read the page, search, filters and sort out of the URL
+    function readURLParams() {
+      const urlParams = new URLSearchParams(window.location.search);
 
-    var searchQuery = urlParams.get('search') || '';
-    var genderQuery = urlParams.get('gender') || '';
-    var statusQuery = urlParams.get('status') || '';
-    var speciesQuery = urlParams.get('species') || '';
-    var sortQuery = urlParams.get('sort');
-    if (sortQuery !== 'name-asc' && sortQuery !== 'name-desc') {
-      sortQuery = 'id';
+      page = urlParams.get('page');
+      page = page == null ? 1 : parseInt(page);
+
+      searchQuery = urlParams.get('search') || '';
+      genderQuery = urlParams.get('gender') || '';
+      statusQuery = urlParams.get('status') || '';
+      speciesQuery = urlParams.get('species') || '';
+      sortQuery = urlParams.get('sort');
+      if (sortQuery !== 'name-asc' && sortQuery !== 'name-desc') {
+        sortQuery = 'id';
+      }
     }
 
     var perPageLoad = 10;      // characters shown per UI page
@@ -307,6 +316,14 @@
       updateURL();
     }
 
+    // browser back/forward: re-read the URL and re-render to match it
+    window.addEventListener('popstate', function () {
+      readURLParams();
+      applyURLParams();
+      getCharacters();
+    });
+
+    readURLParams();
     loadCharacters();
   </script>
 </body>
