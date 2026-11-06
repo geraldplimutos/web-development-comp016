@@ -96,12 +96,24 @@
       const response = await fetch('https://api.attackontitanapi.com/characters/' + id);
       const character = await response.json();
 
-      var species = character.species[0];
-      var color = colors[species.toLowerCase()] || defaultColor;
+      var rawSpecies = character.species;
+      var speciesList = Array.isArray(rawSpecies)
+        ? rawSpecies
+        : (rawSpecies === null || rawSpecies === undefined || rawSpecies === '' ? [] : [rawSpecies]);
+
+      // drop every "human" entry (case-insensitive, trimmed), keeping the rest
+      var filteredSpecies = speciesList.filter(function (item) {
+        return String(item).trim().toLowerCase() !== 'human';
+      });
+      var color = colors[String(filteredSpecies[0] || '').trim().toLowerCase()] || defaultColor;
 
       elName.innerHTML = character.name;
-      elSpecies.innerHTML = joinOrDash(character.species);
-      elSpecies.style.backgroundColor = color;
+      if (filteredSpecies.length > 0) {
+        elSpecies.innerHTML = filteredSpecies.join(', ');
+        elSpecies.style.backgroundColor = color;
+      } else {
+        elSpecies.style.display = 'none';
+      }
       elImgContainer.style.backgroundColor = color;
       if (character.img) {
         elImage.style.objectFit = 'cover';
