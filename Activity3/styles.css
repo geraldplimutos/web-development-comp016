@@ -249,6 +249,8 @@ body {
 }
 
 #currentPage {
+  position: relative;
+  z-index: 2;
   background-color: var(--aot-green);
   border-color: var(--aot-tan);
   color: var(--aot-parchment);
