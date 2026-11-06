@@ -8,6 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="styles.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 
 <body>
@@ -72,7 +73,7 @@
   </div>
 
   <div class="container">
-    <div class="row" id="parent">
+    <div class="aot-grid" id="parent">
 
     </div>
   </div>
@@ -193,23 +194,21 @@
         var name = character.name;
         var picture = character.img;
         var species = capitalizeFirstLetter(character.species[0]);
-        var affiliation = character.groups.length > 0 ? character.groups[0].name : '';
+        var affiliation = character.groups.length > 0 ? character.groups[0].name : '—';
         var color = colors[character.species[0].toLowerCase()] || defaultColor;
-        var imageTag = picture ? '<img class="w-100" src="' + picture + '">' : '';
+        var imageTag = picture ? '<img src="' + picture + '" alt="' + name + '">' : '';
+        var link = 'view.html?id=' + id + '&page=' + page;
 
         elParent.innerHTML += `
-          <div class="col-12">
-            <div class="card my-3 p-4 d-flex flex-row align-items-center aot-card">
-              <div class="rounded-circle overflow-hidden" style="width: 60px; height: 60px; background-color: ` + color + `;">
-                ` + imageTag + `
-              </div>
-              <div class="mx-4 h4">
-                <a class="aot-name" href="view.html?id=`+ id +`&page=`+ page +`"> #` + id + " " + name + ` </a>
-              </div>
-              <div class="d-flex align-items-center ms-auto">
-                <div class="small me-3 aot-muted">` + affiliation + `</div>
-                <div class="rounded-pill px-4 py-1 aot-pill" style="background-color: ` + color + `">` + species + `</div>
-              </div>
+          <div class="card aot-card aot-tcg-card">
+            <a class="aot-tcg-image" href="` + link + `" style="background-color: ` + color + `;">
+              ` + imageTag + `
+            </a>
+            <div class="aot-tcg-id">#` + id + `</div>
+            <div class="rounded-pill aot-pill aot-tcg-species" style="background-color: ` + color + `">` + species + `</div>
+            <div class="aot-tcg-plate">
+              <a class="aot-name aot-tcg-name" href="` + link + `">` + name + `</a>
+              <div class="aot-tcg-info">` + affiliation + `</div>
             </div>
           </div>
         `;
